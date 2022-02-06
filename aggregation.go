@@ -59,7 +59,29 @@ func (c Client) LatestAggregation(ctx context.Context, ticker string) (Aggregati
 		Limit:    1,
 	}
 
+	// Polygon handles time in est
 	est, _ := time.LoadLocation("America/New_York")
 	targetDate := time.Now().In(est)
 	return c.Aggregation(ctx, ticker, 1, Minute, targetDate, targetDate, &opt)
+}
+
+// DailyAggregation get daily aggregation
+// however it will return empty result for stocks out of market time
+// for cryptos, it always returns the valid aggregation data
+func (c Client) DailyAggregation(ctx context.Context, ticker string, opt *AggregationOption, interval ...int) (Aggregation, error) {
+	multiplier := 1
+	if len(interval) == 1 {
+		multiplier = interval[0]
+	}
+
+	if opt == nil {
+		opt = &AggregationOption{
+			Adjusted: true,
+			Sort:     Ascend,
+		}
+	}
+
+	est, _ := time.LoadLocation("America/New_York")
+	targetDate := time.Now().In(est)
+	return c.Aggregation(ctx, ticker, multiplier, Minute, targetDate, targetDate, opt)
 }
