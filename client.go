@@ -198,5 +198,15 @@ func (c Client) endpointWithOpts(endpoint string, opts interface{}) (string, err
 	if optParams != "" {
 		endpoint = fmt.Sprintf("%s?%s", endpoint, optParams)
 	}
+
 	return endpoint, nil
+}
+
+// ttoa time to string helper
+func ttoa(t time.Time, layout ...string) string {
+	l := "2006-01-02"
+	if len(layout) > 0 {
+		l = layout[0]
+	}
+	return t.Format(l)
 }
