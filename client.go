@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/go-querystring/query"
@@ -21,6 +22,12 @@ type Client struct {
 	baseURL    string
 	token      string
 	httpClient *http.Client
+}
+
+// polygon api versions are not unified, sometimes we have to switch to v1
+func (c Client) UseV1Endpoints() Client {
+	c.baseURL = strings.Replace(c.baseURL, "v2", "v1", 1)
+	return c
 }
 
 // Error represents an Polygon API error

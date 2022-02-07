@@ -16,3 +16,10 @@ const Week Timespan = "week"
 const Month Timespan = "month"
 const Quarter Timespan = "quarter"
 const Year Timespan = "year"
+
+type MarketStatus string
+
+const Open MarketStatus = "open"
+const Closed MarketStatus = "closed"
+const EarlyHours MarketStatus = "early_hours"
+const AfterHours MarketStatus = "after_hours"
