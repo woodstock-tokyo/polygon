@@ -20,12 +20,3 @@ func TestAggregation(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 }
-
-func TestLatestAggregation(t *testing.T) {
-	client := NewClient(token)
-
-	_, err := client.LatestAggregation(context.Background(), "X:BTCUSD")
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-}
