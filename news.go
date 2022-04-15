@@ -18,6 +18,7 @@ type News struct {
 		Author       string   `json:"author"`
 		PublishedUTC string   `json:"published_utc"`
 		ArticleURL   string   `json:"article_url"`
+		AmpURL       string   `json:"amp_url"`
 		Tickers      []string `json:"tickers"`
 		ImageURL     string   `json:"image_url"`
 		Description  string   `json:"description"`
