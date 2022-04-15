@@ -35,6 +35,7 @@ type NewsOption struct {
 	Published_LessThanEqual    string `url:"published_utc.lte,omitempty"`
 	Published_GreaterThan      string `url:"published_utc.gt,omitempty"`
 	Published_GreaterThanEqual string `url:"published_utc.gte,omitempty"`
+	Limit                      uint   `url:"limit,omitempty"`
 	Order                      Order  `url:"order,omitempty"`
 	Sort                       string `url:"sort,omitempty"`
 }
