@@ -12,7 +12,12 @@ func TestOpenClose(t *testing.T) {
 		Adjusted: true,
 	}
 
-	_, err := client.OpenClose(context.Background(), "AAPL", "2022-06-01", opt)
+	_, err := client.StockOpenClose(context.Background(), "AAPL", "2022-06-01", opt)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	_, err = client.CryptoOpenClose(context.Background(), "BTC", "USD", "2022-06-01", opt)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

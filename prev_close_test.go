@@ -16,4 +16,9 @@ func TestPrevClose(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
+
+	_, err = client.PrevClose(context.Background(), "X:BTCUSD", opt)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 }
