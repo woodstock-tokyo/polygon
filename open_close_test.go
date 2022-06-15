@@ -5,14 +5,14 @@ import (
 	"testing"
 )
 
-func TestPrevClose(t *testing.T) {
+func TestOpenClose(t *testing.T) {
 	client := NewClient(token)
 
-	opt := &PrevCloseOption{
+	opt := &OpenCloseOption{
 		Adjusted: true,
 	}
 
-	_, err := client.PrevClose(context.Background(), "AAPL", opt)
+	_, err := client.OpenClose(context.Background(), "AAPL", "2022-06-01", opt)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

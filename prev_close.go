@@ -31,6 +31,11 @@ type PrevCloseResult struct {
 	Timestamp              int64   `json:"t"`
 }
 
+// Valid check whether prev close is valid or not
+func (p PrevClose) Valid() bool {
+	return (p.Status == "OK" || p.Status == "DELAYED") && p.Count > 0
+}
+
 // Time check whether prev close is valid or not
 func (pr PrevCloseResult) Time() time.Time {
 	return time.UnixMilli(pr.Timestamp)
