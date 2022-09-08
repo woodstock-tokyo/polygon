@@ -30,6 +30,13 @@ type AggregationResult struct {
 	Timestamp              int64   `json:"t"`
 }
 
+// AggregationResultSortFunc default sort function
+func AggregationResultSortFunc() func(AggregationResult, AggregationResult) bool {
+	return func(r1, r2 AggregationResult) bool {
+		return r1.Timestamp < r2.Timestamp
+	}
+}
+
 // Valid check whether aggregation is valid or not
 func (a Aggregation) Valid() bool {
 	return (a.Status == "OK" || a.Status == "DELAYED") && a.Count > 0
