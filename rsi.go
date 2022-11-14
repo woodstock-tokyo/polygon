@@ -37,8 +37,8 @@ type RSIResponse struct {
 	NextURL   string `json:"next_url"`
 }
 
-// RSIStockOneDay gives a one day RSI for a stock
-func (c Client) RSIStockOneDay(ctx context.Context, ticker string) (float64, error) {
+// LatestRelativeStrengthIndex get latest stock RSI by day for a given ticker
+func (c Client) LatestRelativeStrengthIndex(ctx context.Context, ticker string) (float64, error) {
 	c = c.UseV1Endpoints()
 	ticker = strings.ToUpper(strings.TrimSpace(ticker))
 	opt := &RSIOption{
@@ -48,21 +48,42 @@ func (c Client) RSIStockOneDay(ctx context.Context, ticker string) (float64, err
 		Limit:    1,
 		Order:    Decend,
 	}
-	endpoint, err := c.endpointWithOpts("/indicators/rsi/"+ticker, opt)
+
+	resp, err := c.RelativeStrengthIndex(ctx, ticker, opt)
 	if err != nil {
 		return 0, err
 	}
 
-	var resp RSIResponse
-	if err = c.GetJSON(ctx, endpoint, &resp); err != nil {
-		return 0, fmt.Errorf("get json: %w", err)
-	}
-	if resp.Status != "OK" {
-		return 0, fmt.Errorf("%v: %w", resp.Status, ErrRSIStatus)
-	}
 	if len(resp.Results.Values) == 0 {
 		return 0, ErrRSINoResults
 	}
 
 	return resp.Results.Values[0].Value, err
+}
+
+// RelativeStrengthIndex get stock RSI for a given ticker
+func (c Client) RelativeStrengthIndex(ctx context.Context, ticker string, opt *RSIOption) (resp RSIResponse, err error) {
+	c = c.UseV1Endpoints()
+	ticker = strings.ToUpper(strings.TrimSpace(ticker))
+	endpoint, err := c.endpointWithOpts("/indicators/rsi/"+ticker, opt)
+	if err != nil {
+		return
+	}
+
+	if err = c.GetJSON(ctx, endpoint, &resp); err != nil {
+		err = fmt.Errorf("get json: %w", err)
+		return
+	}
+
+	if resp.Status != "OK" {
+		err = fmt.Errorf("%v: %w", resp.Status, ErrRSIStatus)
+		return
+	}
+
+	if len(resp.Results.Values) == 0 {
+		err = ErrRSINoResults
+		return
+	}
+
+	return resp, err
 }

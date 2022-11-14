@@ -10,7 +10,7 @@ import (
 func Test_RSI(t *testing.T) {
 	ctx := context.Background()
 	c := NewClient(token)
-	rsi, err := c.RSIStockOneDay(ctx, "AAPL")
+	rsi, err := c.LatestRelativeStrengthIndex(ctx, "AAPL")
 	if err != nil {
 		t.Fatal(fmt.Errorf("get rsi: %w", err))
 	}
@@ -23,7 +23,7 @@ func Test_RSI(t *testing.T) {
 func Test_RSIErrorNotFound(t *testing.T) {
 	ctx := context.Background()
 	c := NewClient(token)
-	_, err := c.RSIStockOneDay(ctx, "NOT_A_SYMBOL")
+	_, err := c.LatestRelativeStrengthIndex(ctx, "NOT_A_SYMBOL")
 
 	if !errors.Is(err, ErrRSINoResults) {
 		t.Fatal("unexpected error:", err)
