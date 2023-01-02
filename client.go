@@ -15,7 +15,7 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
-const apiURL = "https://api.polygon.io/v2"
+const apiURL = "https://api.polygon.io/v2" // use v2 as default
 
 // Client models a client to consume the Polygon Cloud API.
 type Client struct {
@@ -27,6 +27,12 @@ type Client struct {
 // polygon api versions are not unified, sometimes we have to switch to v1
 func (c Client) UseV1Endpoints() Client {
 	c.baseURL = strings.Replace(c.baseURL, "v2", "v1", 1)
+	return c
+}
+
+// polygon api versions are not unified, sometimes we have to switch to v3
+func (c Client) UseV3Endpoints() Client {
+	c.baseURL = strings.Replace(c.baseURL, "v2", "v3", 1)
 	return c
 }
 
