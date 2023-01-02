@@ -39,6 +39,7 @@ type TickerDetailResult struct {
 		LogoURL string `json:"logo_url"`
 		IconURL string `json:"icon_url"`
 	} `json:"branding"`
+	SIC string `json:"sic_code"`
 }
 
 type TickerDetailOption struct {
