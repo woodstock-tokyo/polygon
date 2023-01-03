@@ -46,7 +46,7 @@ func (c Client) LatestRelativeStrengthIndex(ctx context.Context, ticker string) 
 		Adjusted: true,
 		Window:   2,
 		Limit:    1,
-		Order:    Decend,
+		Order:    Descend,
 	}
 
 	resp, err := c.RelativeStrengthIndex(ctx, ticker, opt)

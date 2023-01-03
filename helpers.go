@@ -4,7 +4,7 @@ package polygon
 type Order string
 
 const Ascend Order = "asc"
-const Decend Order = "desc"
+const Descend Order = "desc"
 
 // Timespan used for aggregation
 type Timespan string
