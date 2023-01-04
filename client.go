@@ -4,7 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
+
 	"net"
 	"net/http"
 	"net/url"
@@ -176,7 +177,7 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 	// Even if GET didn't return an error, check the status code to make sure
 	// everything was ok.
 	if resp.StatusCode != http.StatusOK {
-		b, err := ioutil.ReadAll(resp.Body)
+		b, err := io.ReadAll(resp.Body)
 		msg := ""
 
 		if err == nil {
@@ -185,7 +186,7 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 
 		return []byte{}, Error{Status: resp.Status, ErrorMessage: msg}
 	}
-	return ioutil.ReadAll(resp.Body)
+	return io.ReadAll(resp.Body)
 }
 
 // Returns an URL object that points to the endpoint with optional query parameters.
