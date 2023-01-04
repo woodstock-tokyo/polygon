@@ -34,7 +34,7 @@ type TickerDetailResult struct {
 	Sector         string `json:"sic_description"`
 	HomePageURL    string `json:"homepage_url"`
 	TotalEmployees int    `json:"total_employees"`
-	ListDate       string `json:"listdate"`
+	ListDate       string `json:"list_date"`
 	Branding       struct {
 		LogoURL string `json:"logo_url"`
 		IconURL string `json:"icon_url"`
