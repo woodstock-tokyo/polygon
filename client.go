@@ -36,6 +36,12 @@ func (c Client) UseV3Endpoints() Client {
 	return c
 }
 
+// polygon api versions are not unified, sometimes we have to switch to vX
+func (c Client) UseVXEndpoints() Client {
+	c.baseURL = strings.Replace(c.baseURL, "v2", "vX", 1)
+	return c
+}
+
 // Error represents an Polygon API error
 type Error struct {
 	Status       string `json:"status"`

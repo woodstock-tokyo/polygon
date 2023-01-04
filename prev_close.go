@@ -46,7 +46,7 @@ type PrevCloseOption struct {
 	Adjusted bool `url:"adjusted,omitempty"`
 }
 
-// News retrieves the given number of news articles for the given stock symbol.
+// PrevClose Get the previous day's open, high, low, and close (OHLC) for the specified stock ticker.
 func (c Client) PrevClose(ctx context.Context, ticker string, opt *PrevCloseOption) (PrevClose, error) {
 	p := PrevClose{}
 	endpoint, err := c.endpointWithOpts(fmt.Sprintf("/aggs/ticker/%s/prev", ticker), opt)

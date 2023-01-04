@@ -54,7 +54,7 @@ type AggregationOption struct {
 	Limit    int   `url:"limit,omitempty"`
 }
 
-// News retrieves the given number of news articles for the given stock symbol.
+// Aggregation Get aggregate bars for a ticker over a given date range in custom time window sizes
 func (c Client) Aggregation(ctx context.Context, ticker string, multiplier int, timespan Timespan, from, to time.Time, opt *AggregationOption) (Aggregation, error) {
 	a := Aggregation{}
 	endpoint, err := c.endpointWithOpts(fmt.Sprintf("/aggs/ticker/%s/range/%d/%s/%s/%s", ticker, multiplier, timespan, ttoa(from), ttoa(to)), opt)

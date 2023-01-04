@@ -47,7 +47,7 @@ type DividendOption struct {
 	Sort         string       `url:"sort,omitempty"`
 }
 
-// News retrieves the given number of news articles for the given stock symbol.
+// Dividend Get a list of historical cash dividends, including the ticker symbol, declaration date, ex-dividend date, record date, pay date, frequency, and amount.
 func (c Client) Dividend(ctx context.Context, ticker string, opt *DividendOption) (Dividend, error) {
 	c = c.UseV3Endpoints()
 	d := Dividend{}
@@ -65,7 +65,7 @@ func (c Client) Dividend(ctx context.Context, ticker string, opt *DividendOption
 	return d, err
 }
 
-// News retrieves the given number of news articles for the given stock symbol.
+// LastestDiviend retrieves the latest dividend for a given ticker
 func (c Client) LastestDiviend(ctx context.Context, ticker string, opt *DividendOption) (DividendResult, error) {
 	if opt == nil {
 		opt = &DividendOption{}

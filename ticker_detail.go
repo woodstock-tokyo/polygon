@@ -46,7 +46,6 @@ type TickerDetailOption struct {
 	Date string `url:"date,omitempty"`
 }
 
-// News retrieves the given number of news articles for the given stock symbol.
 func (c Client) TickerDetail(ctx context.Context, ticker string, opt *TickerDetailOption) (TickerDetail, error) {
 	c = c.UseV3Endpoints()
 	d := TickerDetail{}
