@@ -9,7 +9,7 @@ import (
 
 func Test_RSI(t *testing.T) {
 	ctx := context.Background()
-	c := NewClient(token)
+	c := NewClient(token, edgeID, edgeIPAddress)
 	rsi, err := c.LatestRelativeStrengthIndex(ctx, "AAPL")
 	if err != nil {
 		t.Fatal(fmt.Errorf("get rsi: %w", err))
@@ -22,7 +22,7 @@ func Test_RSI(t *testing.T) {
 
 func Test_RSIErrorNotFound(t *testing.T) {
 	ctx := context.Background()
-	c := NewClient(token)
+	c := NewClient(token, edgeID, edgeIPAddress)
 	_, err := c.LatestRelativeStrengthIndex(ctx, "NOT_A_SYMBOL")
 
 	if !errors.Is(err, ErrRSINoResults) {

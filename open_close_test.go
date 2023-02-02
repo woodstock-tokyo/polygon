@@ -6,7 +6,7 @@ import (
 )
 
 func TestOpenClose(t *testing.T) {
-	client := NewClient(token)
+	client := NewClient(token, edgeID, edgeIPAddress)
 
 	opt := &OpenCloseOption{
 		Adjusted: true,

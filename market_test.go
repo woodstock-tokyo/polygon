@@ -6,7 +6,7 @@ import (
 )
 
 func TestMarket(t *testing.T) {
-	client := NewClient(token)
+	client := NewClient(token, edgeID, edgeIPAddress)
 
 	_, err := client.MarketStatus(context.Background())
 	if err != nil {

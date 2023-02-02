@@ -6,7 +6,7 @@ import (
 )
 
 func TestPrevClose(t *testing.T) {
-	client := NewClient(token)
+	client := NewClient(token, edgeID, edgeIPAddress)
 
 	opt := &PrevCloseOption{
 		Adjusted: true,
