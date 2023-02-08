@@ -23,6 +23,7 @@ type SummaryResult struct {
 	Name         string         `json:"name"`
 	Price        float64        `json:"price"`
 	Session      SummarySession `json:"session"`
+	Options      SummaryOptions `json:"options"`
 	Ticker       string         `json:"ticker"`
 	Type         string         `json:"type"`
 }
@@ -43,36 +44,46 @@ type SummarySession struct {
 	Volume                    float64 `json:"volume"`
 }
 
+// SummaryOptions summary options item
+type SummaryOptions struct {
+	ContractType      string `json:"contract_type"`
+	ExerciseStyle     string `json:"exercise_style"`
+	ExpirationDate    string `json:"expiration_date"`
+	SharesPerContract uint   `json:"shares_per_contract"`
+	StrikePrice       uint   `json:"strike_price"`
+	UnderlyingTicker  string `json:"underlying_ticker"`
+}
+
 // SummaryOption summary option
 type SummaryOption struct {
 	TickerAnyOf string `url:"ticker.any_of,omitempty"`
 }
 
 // Asset
-type Asset struct {
+type SummaryAsset struct {
 	Ticker    string
 	AssetType string
 }
 
 // Resolve resolve ticker format for sumary end point
-func (a Asset) resolveTicker() string {
-	switch a.AssetType {
+func (sa SummaryAsset) resolveTicker() string {
+	switch sa.AssetType {
 	case "stock":
-		return a.Ticker
+		return sa.Ticker
 	case "option":
-		return fmt.Sprintf("O:%s", strings.ToUpper(a.Ticker))
+		return fmt.Sprintf("O:%s", strings.ToUpper(sa.Ticker))
 	case "forex":
-		return fmt.Sprintf("C:%s", strings.ToUpper(strings.ReplaceAll(a.Ticker, "/", "")))
+		return fmt.Sprintf("C:%s", strings.ToUpper(strings.ReplaceAll(sa.Ticker, "/", "")))
 	case "crypto":
-		return fmt.Sprintf("X:%sUSD", strings.ToUpper(a.Ticker))
+		return fmt.Sprintf("X:%sUSD", strings.ToUpper(sa.Ticker))
 
 	}
 
-	return a.Ticker
+	return sa.Ticker
 }
 
 // Summary Get everything needed to visualize the tick-by-tick movement of a list of tickers.
-func (c Client) Summary(ctx context.Context, assets []Asset) (Summary, error) {
+func (c Client) Summary(ctx context.Context, assets []SummaryAsset) (Summary, error) {
 
 	opt := SummaryOption{}
 

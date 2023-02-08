@@ -8,7 +8,7 @@ import (
 func TestSummary(t *testing.T) {
 	client := NewClient(token, edgeID, edgeIPAddress)
 
-	assets := []Asset{
+	assets := []SummaryAsset{
 		{Ticker: "AAPL", AssetType: "stock"},
 		{Ticker: "EUR/USD", AssetType: "forex"},
 		{Ticker: "BTC", AssetType: "crypto"},
