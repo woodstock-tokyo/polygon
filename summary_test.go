@@ -2,7 +2,6 @@ package polygon
 
 import (
 	"context"
-	"fmt"
 	"testing"
 )
 
@@ -16,10 +15,8 @@ func TestSummary(t *testing.T) {
 		{Ticker: "SPY250321C00380000", AssetType: "option"},
 	}
 
-	s, err := client.Summary(context.Background(), assets)
+	_, err := client.Summary(context.Background(), assets)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-
-	fmt.Println(s)
 }
