@@ -7,7 +7,7 @@ import (
 )
 
 func TestAggregation(t *testing.T) {
-	client := NewClient(token, edgeID, edgeIPAddress)
+	client := NewClient(token)
 
 	opt := &AggregationOption{
 		Adjusted: true,

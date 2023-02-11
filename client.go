@@ -20,11 +20,9 @@ const apiURL = "https://api.polygon.io/v2" // use v2 as default
 
 // Client models a client to consume the Polygon Cloud API.
 type Client struct {
-	baseURL       string
-	token         string
-	edgeID        string
-	edgeIPAddress string
-	httpClient    *http.Client
+	baseURL    string
+	token      string
+	httpClient *http.Client
 }
 
 // polygon api versions are not unified, sometimes we have to switch to v1
@@ -61,12 +59,10 @@ func (e Error) Error() string {
 }
 
 // NewClient creates a client with the given authorization token.
-func NewClient(token string, edgeID string, edgeIPAddress string, options ...ClientOption) *Client {
+func NewClient(token string, options ...ClientOption) *Client {
 	client := &Client{
-		token:         token,
-		edgeID:        edgeID,
-		edgeIPAddress: edgeIPAddress,
-		httpClient:    &http.Client{Timeout: time.Second * 60},
+		token:      token,
+		httpClient: &http.Client{Timeout: time.Second * 60},
 	}
 
 	// apply options
@@ -173,10 +169,6 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
-
-	req.Header.Set("X-Polygon-Edge-ID", c.edgeID)
-	req.Header.Set("X-Polygon-Edge-IP-Address", c.edgeIPAddress)
-
 	resp, err := c.httpClient.Do(req.WithContext(ctx))
 	if err != nil {
 		return []byte{}, err
