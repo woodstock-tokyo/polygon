@@ -6,7 +6,7 @@ import (
 )
 
 func TestTickerDetail(t *testing.T) {
-	client := NewClient(token, edgeID, edgeIPAddress)
+	client := NewClient(token)
 	_, err := client.TickerDetail(context.Background(), "AAPL", nil)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)

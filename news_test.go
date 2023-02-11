@@ -6,7 +6,7 @@ import (
 )
 
 func TestNews(t *testing.T) {
-	client := NewClient(token, edgeID, edgeIPAddress)
+	client := NewClient(token)
 
 	opt := &NewsOption{
 		Published_GreaterThan: "2020-02-01",
