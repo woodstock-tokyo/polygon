@@ -28,6 +28,11 @@ type OpenCloseOption struct {
 func (c Client) StockOpenClose(ctx context.Context, ticker string, date string, opt *OpenCloseOption) (OpenClose, error) {
 	c = c.UseV1Endpoints()
 	p := OpenClose{}
+
+	if c.launchPad {
+		return p, fmt.Errorf("launchpad does not support this endpoint")
+	}
+
 	endpoint, err := c.endpointWithOpts(fmt.Sprintf("/open-close/%s/%s", ticker, date), opt)
 	if err != nil {
 		return p, err

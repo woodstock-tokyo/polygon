@@ -49,6 +49,11 @@ type PrevCloseOption struct {
 // PrevClose Get the previous day's open, high, low, and close (OHLC) for the specified stock ticker.
 func (c Client) PrevClose(ctx context.Context, ticker string, opt *PrevCloseOption) (PrevClose, error) {
 	p := PrevClose{}
+
+	if c.launchPad {
+		return p, fmt.Errorf("launchpad does not support this endpoint")
+	}
+
 	endpoint, err := c.endpointWithOpts(fmt.Sprintf("/aggs/ticker/%s/prev", ticker), opt)
 	if err != nil {
 		return p, err

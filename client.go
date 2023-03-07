@@ -23,6 +23,14 @@ type Client struct {
 	baseURL    string
 	token      string
 	httpClient *http.Client
+	launchPad  bool
+	Edge       *Edge
+}
+
+// Edge is used for polygon launchpad
+type Edge struct {
+	id        string
+	ipAddress string
 }
 
 // polygon api versions are not unified, sometimes we have to switch to v1
@@ -78,14 +86,14 @@ func NewClient(token string, options ...ClientOption) *Client {
 	return client
 }
 
-// WithHTTPClient sets the http.Client for a new IEX Client
+// WithHTTPClient sets the http.Client for a new Polygon Client
 func WithHTTPClient(httpClient *http.Client) ClientOption {
 	return func(client *Client) {
 		client.httpClient = httpClient
 	}
 }
 
-// WithSecureHTTPClient sets a secure http.Client for a new IEX Client
+// WithSecureHTTPClient sets a secure http.Client for a new Polygon Client
 func WithSecureHTTPClient() ClientOption {
 	return func(client *Client) {
 		client.httpClient = &http.Client{
@@ -101,10 +109,22 @@ func WithSecureHTTPClient() ClientOption {
 	}
 }
 
-// WithBaseURL sets the baseURL for a new IEX Client
+// WithBaseURL sets the baseURL for a new Polygon Client
 func WithBaseURL(baseURL string) ClientOption {
 	return func(client *Client) {
 		client.baseURL = baseURL
+	}
+}
+
+// WithEdge set edge for Polygon launchpad
+func WithEdge(id, ipAddress string) ClientOption {
+	return func(client *Client) {
+		client.Edge = &Edge{
+			id:        id,
+			ipAddress: ipAddress,
+		}
+
+		client.launchPad = true
 	}
 }
 
@@ -169,6 +189,12 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
+
+	if c.Edge != nil {
+		req.Header.Set("X-Polygon-Edge-ID", c.Edge.id)
+		req.Header.Set("X-Polygon-Edge-IP-Address", c.Edge.ipAddress)
+	}
+
 	resp, err := c.httpClient.Do(req.WithContext(ctx))
 	if err != nil {
 		return []byte{}, err

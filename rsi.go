@@ -39,6 +39,10 @@ type RSIResponse struct {
 
 // LatestRelativeStrengthIndex get latest stock RSI by day for a given ticker
 func (c Client) LatestRelativeStrengthIndex(ctx context.Context, ticker string) (float64, error) {
+	if c.launchPad {
+		return 0.0, fmt.Errorf("launchpad does not support this endpoint")
+	}
+
 	c = c.UseV1Endpoints()
 	ticker = strings.ToUpper(strings.TrimSpace(ticker))
 	opt := &RSIOption{
@@ -63,6 +67,10 @@ func (c Client) LatestRelativeStrengthIndex(ctx context.Context, ticker string) 
 
 // RelativeStrengthIndex get stock RSI for a given ticker
 func (c Client) RelativeStrengthIndex(ctx context.Context, ticker string, opt *RSIOption) (resp RSIResponse, err error) {
+	if c.launchPad {
+		return RSIResponse{}, fmt.Errorf("launchpad does not support this endpoint")
+	}
+
 	c = c.UseV1Endpoints()
 	ticker = strings.ToUpper(strings.TrimSpace(ticker))
 	endpoint, err := c.endpointWithOpts("/indicators/rsi/"+ticker, opt)
