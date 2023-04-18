@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/woodstock-tokyo/logger"
 )
 
 const apiURL = "https://api.polygon.io/v2" // use v2 as default
@@ -194,6 +195,12 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 		req.Header.Set("X-Polygon-Edge-ID", c.edge.id)
 		req.Header.Set("X-Polygon-Edge-IP-Address", c.edge.ipAddress)
 	}
+
+	// add log
+	logger.Type("polygon-api").WithFields(logger.Fields{
+		"endpoint": address,
+		"time":     time.Now().Format(time.RFC3339),
+	}).Infoln("")
 
 	resp, err := c.httpClient.Do(req.WithContext(ctx))
 	if err != nil {
