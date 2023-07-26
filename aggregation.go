@@ -31,9 +31,17 @@ type AggregationResult struct {
 }
 
 // AggregationResultSortFunc default sort function
-func AggregationResultSortFunc() func(AggregationResult, AggregationResult) bool {
-	return func(r1, r2 AggregationResult) bool {
-		return r1.Timestamp < r2.Timestamp
+func AggregationResultSortFunc() func(AggregationResult, AggregationResult) int {
+	return func(r1, r2 AggregationResult) int {
+		if r1.Timestamp < r2.Timestamp {
+			return -1
+		}
+
+		if r1.Timestamp > r2.Timestamp {
+			return 1
+		}
+
+		return 0
 	}
 }
 
