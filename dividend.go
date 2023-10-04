@@ -41,10 +41,11 @@ type DividendOption struct {
 	Frequency int `url:"frequency,omitempty"`
 	// Query by the type of dividend. Dividends that have been paid and/or are expected to be paid on consistent schedules are denoted as CD.
 	// Special Cash dividends that have been paid that are infrequent or unusual, and/or can not be expected to occur in the future are denoted as SC.
-	DividendType DividendType `url:"dividend_type,omitempty"`
-	Order        Order        `url:"order,omitempty"`
-	Limit        uint         `url:"limit,omitempty"`
-	Sort         string       `url:"sort,omitempty"`
+	DividendType      DividendType `url:"dividend_type,omitempty"`
+	Order             Order        `url:"order,omitempty"`
+	Limit             uint         `url:"limit,omitempty"`
+	Sort              string       `url:"sort,omitempty"`
+	ExDividendDateGTE string       `url:"ex_dividend_date.gte,omitempty"`
 }
 
 // Dividend Get a list of historical cash dividends, including the ticker symbol, declaration date, ex-dividend date, record date, pay date, frequency, and amount.
