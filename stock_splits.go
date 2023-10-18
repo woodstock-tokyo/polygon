@@ -20,11 +20,12 @@ type StockSplitsResult struct {
 }
 
 type StockSplitsOption struct {
-	Ticker        string `url:"ticker,omitempty"`
-	ExecutionDate string `url:"execution_date,omitempty"`
-	Order         Order  `url:"order,omitempty"`
-	Limit         uint   `url:"limit,omitempty"`
-	Sort          string `url:"sort,omitempty"`
+	Ticker           string `url:"ticker,omitempty"`
+	ExecutionDate    string `url:"execution_date,omitempty"`
+	ExecutionDateGTE string `url:"execution_date.gte,omitempty"`
+	Order            Order  `url:"order,omitempty"`
+	Limit            uint   `url:"limit,omitempty"`
+	Sort             string `url:"sort,omitempty"`
 }
 
 // StockSplits Get a list of historical stock splits
