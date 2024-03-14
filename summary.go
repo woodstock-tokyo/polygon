@@ -86,10 +86,6 @@ func (c Client) Summary(ctx context.Context, assets []SummaryAsset) (Summary, er
 	s := Summary{}
 	c = c.UseV1Endpoints()
 
-	if !c.launchPad {
-		return s, fmt.Errorf("only launchpad supports this endpoint")
-	}
-
 	opt := SummaryOption{}
 	for _, asset := range assets {
 		if opt.TickerAnyOf == "" {

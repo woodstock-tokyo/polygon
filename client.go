@@ -24,14 +24,6 @@ type Client struct {
 	baseURL    string
 	token      string
 	httpClient *http.Client
-	launchPad  bool
-	edge       *edge
-}
-
-// edge is used for polygon launchpad
-type edge struct {
-	id        string
-	ipAddress string
 }
 
 // polygon api versions are not unified, sometimes we have to switch to v1
@@ -117,18 +109,6 @@ func WithBaseURL(baseURL string) ClientOption {
 	}
 }
 
-// WithEdge set edge for Polygon launchpad
-func WithEdge(id, ipAddress string) ClientOption {
-	return func(client *Client) {
-		client.edge = &edge{
-			id:        id,
-			ipAddress: ipAddress,
-		}
-
-		client.launchPad = true
-	}
-}
-
 // GetJSON gets the JSON data from the given endpoint.
 func (c *Client) GetJSON(ctx context.Context, endpoint string, v any) error {
 	u, err := c.url(endpoint, map[string]string{"apiKey": c.token})
@@ -189,11 +169,6 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 	req, err := http.NewRequest("GET", address, nil)
 	if err != nil {
 		return []byte{}, err
-	}
-
-	if c.edge != nil {
-		req.Header.Set("X-Polygon-Edge-ID", c.edge.id)
-		req.Header.Set("X-Polygon-Edge-IP-Address", c.edge.ipAddress)
 	}
 
 	// add log
