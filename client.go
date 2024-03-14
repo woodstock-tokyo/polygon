@@ -134,6 +134,7 @@ func (c *Client) FetchURLToJSON(ctx context.Context, u *url.URL, v any) error {
 	if err != nil {
 		return err
 	}
+
 	return json.Unmarshal(data, v)
 }
 
