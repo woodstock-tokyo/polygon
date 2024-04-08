@@ -17,13 +17,15 @@ import (
 	"github.com/woodstock-tokyo/logger"
 )
 
-const apiURL = "https://api.polygon.io/v2" // use v2 as default
+const apiURL = "https://api.polygon.io/v2"       // use v2 as default
+const websocketURL = "wss://business.polygon.io" // use launchpad as default
 
 // Client models a client to consume the Polygon Cloud API.
 type Client struct {
-	baseURL    string
-	token      string
-	httpClient *http.Client
+	baseURL          string
+	websocketBaseURL string
+	token            string
+	httpClient       *http.Client
 }
 
 // polygon api versions are not unified, sometimes we have to switch to v1
@@ -74,6 +76,11 @@ func NewClient(token string, options ...ClientOption) *Client {
 	// set default values
 	if client.baseURL == "" {
 		client.baseURL = apiURL
+	}
+
+	// set default values
+	if client.websocketBaseURL == "" {
+		client.websocketBaseURL = websocketURL
 	}
 
 	return client
