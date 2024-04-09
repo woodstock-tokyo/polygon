@@ -1,8 +1,11 @@
 package polygon
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"golang.org/x/net/websocket"
@@ -35,9 +38,35 @@ func TestSubscribeAggregatesPerMinute(t *testing.T) {
 
 	go func() {
 		client := NewClient(token)
-		err := client.SubscribeAggregatesPerMinute(websocketClient, aggregateChan, errChan, []string{"AAPL", "NVDA"})
+		err := client.SubscribeAggregates(websocketClient, []string{"AAPL", "NVDA"}, EventTypeAM)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
+		}
+
+		for {
+			_, msg, err := websocketClient.ReadMessage()
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+				return
+			}
+			msg = bytes.Trim(msg, "\x00")
+			msgString := string(msg[:])
+			// if it's a message object, just print it
+			if strings.Contains(msgString, "message") {
+				fmt.Printf("%s\n", msgString)
+				continue
+			}
+
+			var stocks []Aggregate
+			err = json.Unmarshal(msg, &stocks)
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+				return
+			}
+
+			for _, stock := range stocks {
+				aggregateChan <- stock
+			}
 		}
 	}()
 

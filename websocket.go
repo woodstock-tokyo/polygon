@@ -1,8 +1,6 @@
 package polygon
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -40,7 +38,6 @@ const (
 type WebSocketClient interface {
 	Dial(urlStr string, reqHeader http.Header)
 	WriteMessage(messageType int, data []byte) error
-	ReadMessage() (messageType int, message []byte, err error)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -77,10 +74,9 @@ type Aggregate struct {
 	OTC               *bool         `json:"otc"`
 }
 
-func (c Client) SubscribeAggregatesPerMinute(client WebSocketClient, pipe chan Aggregate, errorPipe chan error, symbols []string) (err error) {
+func (c Client) SubscribeAggregates(client WebSocketClient, symbols []string, eventType EventTypeEnum) (err error) {
 	// connect
 	client.Dial(fmt.Sprintf("%s/stocks", c.websocketBaseURL), nil)
-
 	// auth
 	err = client.WriteMessage(TextMessage, []byte(fmt.Sprintf("{\"action\":\"auth\",\"params\":\"%s\"}", c.token)))
 	if err != nil {
@@ -89,75 +85,13 @@ func (c Client) SubscribeAggregatesPerMinute(client WebSocketClient, pipe chan A
 
 	// subscribe
 	// https://polygon.io/docs/stocks/ws_stocks_am
-	channel := resolveStockChannel(symbols, EventTypeAM)
+	channel := resolveStockChannel(symbols, eventType)
 	err = client.WriteMessage(TextMessage, []byte(fmt.Sprintf("{\"action\":\"subscribe\",\"params\":\"%s\"}", channel)))
 	if err != nil {
 		return
 	}
 
-	for {
-		_, msg, err := client.ReadMessage()
-		if err != nil {
-			return err
-		}
-		msg = bytes.Trim(msg, "\x00")
-		msgString := string(msg[:])
-		if strings.Contains(msgString, "message") {
-			fmt.Printf("%s\n", msgString)
-			continue
-		}
-
-		// it's slice in the case of multiple items
-		// https://polygon.io/docs/stocks/ws_getting-started
-		var stocks []Aggregate
-		err = json.Unmarshal(msg, &stocks)
-		if err != nil {
-			errorPipe <- err
-			continue
-		}
-
-		for _, stock := range stocks {
-			pipe <- stock
-		}
-	}
-}
-
-func (c Client) SubscribeAggregatesPerSecond(client WebSocketClient, aggregateChan chan Aggregate, errorChan chan error, symbols []string) (err error) {
-	// connect
-	client.Dial(fmt.Sprintf("%s/stocks", c.websocketBaseURL), nil)
-	// auth
-	if err = client.WriteMessage(TextMessage, []byte(fmt.Sprintf("{\"action\":\"auth\",\"params\":\"%s\"}", c.token))); err != nil {
-		return
-	}
-
-	// subscribe
-	// https://polygon.io/docs/stocks/ws_stocks_a
-	channel := resolveStockChannel(symbols, EventTypeA)
-	fmt.Println("Subscribed to channel", channel)
-	if err = client.WriteMessage(TextMessage, []byte(fmt.Sprintf("{\"action\":\"subscribe\",\"params\":\"%s\"}", channel))); err != nil {
-		return
-	}
-
-	for {
-		_, msg, err := client.ReadMessage()
-		if err != nil {
-			errorChan <- err
-			continue
-		}
-
-		// it's slice in the case of multiple items
-		// https://polygon.io/docs/stocks/ws_getting-started
-		var stocks []Aggregate
-		err = json.Unmarshal(msg, &stocks)
-		if err != nil {
-			errorChan <- err
-			continue
-		}
-
-		for _, stock := range stocks {
-			aggregateChan <- stock
-		}
-	}
+	return
 }
 
 func resolveStockChannel(symbols []string, eventType EventTypeEnum) string {

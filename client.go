@@ -18,7 +18,7 @@ import (
 )
 
 const apiURL = "https://api.polygon.io/v2"       // use v2 as default
-const websocketURL = "wss://business.polygon.io" // use launchpad as default
+const websocketURL = "wss://business.polygon.io" // use business as default
 
 // Client models a client to consume the Polygon Cloud API.
 type Client struct {
@@ -113,6 +113,13 @@ func WithSecureHTTPClient() ClientOption {
 func WithBaseURL(baseURL string) ClientOption {
 	return func(client *Client) {
 		client.baseURL = baseURL
+	}
+}
+
+// WithBaseURL sets the baseURL for a new Polygon Client
+func WithWebsocketBaseURL(baseURL string) ClientOption {
+	return func(client *Client) {
+		client.websocketBaseURL = baseURL
 	}
 }
 
