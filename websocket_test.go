@@ -32,13 +32,13 @@ func (c *TestWebsocketClient) ReadMessage() (messageType int, message []byte, er
 
 // NOTE: it takes more than a minute
 func TestSubscribeAggregatesPerMinute(t *testing.T) {
-	aggregateChan := make(chan Aggregate)
+	aggregateChan := make(chan StockAggregate)
 	errChan := make(chan error)
 	websocketClient := &TestWebsocketClient{}
 
 	go func() {
 		client := NewClient(token)
-		err := client.SubscribeAggregates(websocketClient, []string{"AAPL", "NVDA"}, EventTypeAM)
+		err := client.SubscribeStockAggregates(websocketClient, []string{"AAPL", "NVDA"}, StockEventTypeAM)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
@@ -57,7 +57,7 @@ func TestSubscribeAggregatesPerMinute(t *testing.T) {
 				continue
 			}
 
-			var stocks []Aggregate
+			var stocks []StockAggregate
 			err = json.Unmarshal(msg, &stocks)
 			if err != nil {
 				t.Errorf("unexpected error: %v", err)

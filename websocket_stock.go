@@ -40,41 +40,40 @@ type WebSocketClient interface {
 	WriteMessage(messageType int, data []byte) error
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////// polygon websocket //////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-
-// EventTypeEnum event type enum
-type EventTypeEnum string
+// ////////////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////// polygon websocket //////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////////////
+// StockEventTypeEnum event type enum
+type StockEventTypeEnum string
 
 const (
-	// EventTypeOther others
-	EventTypeOther EventTypeEnum = ""
-	// EventTypeAM minute aggregates
-	EventTypeAM EventTypeEnum = "AM"
-	// EventTypeA second aggregates
-	EventTypeA EventTypeEnum = "A"
+	// StockEventTypeOther others
+	StockEventTypeOther StockEventTypeEnum = ""
+	// StockEventTypeAM minute aggregates
+	StockEventTypeAM StockEventTypeEnum = "AM"
+	// StockEventTypeA second aggregates
+	StockEventTypeA StockEventTypeEnum = "A"
 )
 
-type Aggregate struct {
-	Event             EventTypeEnum `json:"ev"`
-	Symbol            string        `json:"sym"`
-	TickVolume        int64         `json:"v"`
-	AccumulatedVolume int64         `json:"av"`
-	Open              float64       `json:"op"`
-	TickVWAP          float64       `json:"vw"`
-	TickOpen          float64       `json:"o"`
-	TickClose         float64       `json:"c"`
-	TickHigh          float64       `json:"h"`
-	TickLow           float64       `json:"l"`
-	VWAP              float64       `json:"a"`
-	AverageTradeSize  float64       `json:"z"`
-	StartTimestamp    int64         `json:"s"`
-	EndTimestamp      int64         `json:"e"`
-	OTC               *bool         `json:"otc"`
+type StockAggregate struct {
+	Event             StockEventTypeEnum `json:"ev"`
+	Symbol            string             `json:"sym"`
+	TickVolume        int64              `json:"v"`
+	AccumulatedVolume int64              `json:"av"`
+	Open              float64            `json:"op"`
+	TickVWAP          float64            `json:"vw"`
+	TickOpen          float64            `json:"o"`
+	TickClose         float64            `json:"c"`
+	TickHigh          float64            `json:"h"`
+	TickLow           float64            `json:"l"`
+	VWAP              float64            `json:"a"`
+	AverageTradeSize  float64            `json:"z"`
+	StartTimestamp    int64              `json:"s"`
+	EndTimestamp      int64              `json:"e"`
+	OTC               *bool              `json:"otc"`
 }
 
-func (c Client) SubscribeAggregates(client WebSocketClient, symbols []string, eventType EventTypeEnum) (err error) {
+func (c Client) SubscribeStockAggregates(client WebSocketClient, symbols []string, eventType StockEventTypeEnum) (err error) {
 	// connect
 	client.Dial(fmt.Sprintf("%s/stocks", c.websocketBaseURL), nil)
 	// auth
@@ -94,7 +93,7 @@ func (c Client) SubscribeAggregates(client WebSocketClient, symbols []string, ev
 	return
 }
 
-func resolveStockChannel(symbols []string, eventType EventTypeEnum) string {
+func resolveStockChannel(symbols []string, eventType StockEventTypeEnum) string {
 	var sb strings.Builder
 	for i, symbol := range symbols {
 		sb.WriteString(fmt.Sprintf("%s.%s", eventType, symbol))
