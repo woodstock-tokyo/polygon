@@ -35,7 +35,7 @@ type CryptoAggregate struct {
 
 func (c Client) SubscribeCryptoAggregates(client WebSocketClient, pairs []string, eventType CryptoEventTypeEnum) (err error) {
 	// connect
-	client.Dial(fmt.Sprintf("%s/cryptos", c.websocketBaseURL), nil)
+	client.Dial(fmt.Sprintf("%s/crypto", c.websocketBaseURL), nil)
 	// auth
 	err = client.WriteMessage(TextMessage, []byte(fmt.Sprintf("{\"action\":\"auth\",\"params\":\"%s\"}", c.token)))
 	if err != nil {
