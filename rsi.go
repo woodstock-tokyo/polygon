@@ -14,12 +14,17 @@ var (
 
 // RSIOption options for fetching RSI
 type RSIOption struct {
-	Timespan string `url:"timespan"`
-	Adjusted bool   `json:"adjusted"`
-	Window   uint   `json:"window"`
-	Limit    uint   `url:"limit,omitempty"`
-	Order    Order  `url:"order,omitempty"`
-	Sort     string `url:"sort,omitempty"`
+	Timespan                    string `url:"timespan"`
+	Timestamp                   uint   `url:"timestamp,omitempty"`
+	TimestampGreaterThan        uint   `url:"timestamp.gt,omitempty"`
+	TimestampLessThan           uint   `url:"timestamp.lt,omitempty"`
+	TimestampGreaterThanOrEqual uint   `url:"timestamp.gte,omitempty"`
+	TimestampLessThanOrEqual    uint   `url:"timestamp.lte,omitempty"`
+	Adjusted                    bool   `json:"adjusted"`
+	Window                      uint   `json:"window"`
+	Limit                       uint   `url:"limit,omitempty"`
+	Order                       Order  `url:"order,omitempty"`
+	Sort                        string `url:"sort,omitempty"`
 }
 
 type RSIResponse struct {
@@ -44,7 +49,7 @@ func (c Client) LatestRelativeStrengthIndex(ctx context.Context, ticker string) 
 	opt := &RSIOption{
 		Timespan: "day",
 		Adjusted: true,
-		Window:   2,
+		Window:   14,
 		Limit:    1,
 		Order:    Descend,
 	}
