@@ -14,17 +14,17 @@ var (
 
 // SMAOption options for fetching SMA
 type SMAOption struct {
-	Timespan                    string `url:"timespan"`
-	Timestamp                   uint   `url:"timestamp,omitempty"`
-	TimestampGreaterThan        uint   `url:"timestamp.gt,omitempty"`
-	TimestampLessThan           uint   `url:"timestamp.lt,omitempty"`
-	TimestampGreaterThanOrEqual uint   `url:"timestamp.gte,omitempty"`
-	TimestampLessThanOrEqual    uint   `url:"timestamp.lte,omitempty"`
-	Adjusted                    bool   `json:"adjusted"`
-	Window                      uint   `json:"window"`
-	Limit                       uint   `url:"limit,omitempty"`
-	Order                       Order  `url:"order,omitempty"`
-	Sort                        string `url:"sort,omitempty"`
+	Timespan                    Timespan `url:"timespan"`
+	Timestamp                   uint     `url:"timestamp,omitempty"`
+	TimestampGreaterThan        uint     `url:"timestamp.gt,omitempty"`
+	TimestampLessThan           uint     `url:"timestamp.lt,omitempty"`
+	TimestampGreaterThanOrEqual uint     `url:"timestamp.gte,omitempty"`
+	TimestampLessThanOrEqual    uint     `url:"timestamp.lte,omitempty"`
+	Adjusted                    bool     `url:"adjusted,omitempty"`
+	Window                      uint     `url:"window,omitempty"`
+	Limit                       uint     `url:"limit,omitempty"`
+	Order                       Order    `url:"order,omitempty"`
+	Sort                        string   `url:"sort,omitempty"`
 }
 
 type SMAResponse struct {

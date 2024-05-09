@@ -11,7 +11,7 @@ func Test_SMA(t *testing.T) {
 	ctx := context.Background()
 	c := NewClient(token)
 	sma, err := c.SimpleMovingAverage(ctx, "AAPL", &SMAOption{
-		Timespan: "day",
+		Timespan: Day,
 		Window:   50,
 		Limit:    1,
 	})
@@ -29,7 +29,7 @@ func Test_SMAErrorNotFound(t *testing.T) {
 	ctx := context.Background()
 	c := NewClient(token)
 	_, err := c.SimpleMovingAverage(ctx, "NOT_A_SYMBOL", &SMAOption{
-		Timespan: "day",
+		Timespan: Day,
 		Window:   50,
 		Limit:    1,
 	})

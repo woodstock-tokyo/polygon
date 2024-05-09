@@ -11,7 +11,7 @@ func Test_EMA(t *testing.T) {
 	ctx := context.Background()
 	c := NewClient(token)
 	sma, err := c.ExponentialMovingAverage(ctx, "AAPL", &EMAOption{
-		Timespan: "day",
+		Timespan: Day,
 		Window:   50,
 		Limit:    1,
 	})
@@ -29,7 +29,7 @@ func Test_EMAErrorNotFound(t *testing.T) {
 	ctx := context.Background()
 	c := NewClient(token)
 	_, err := c.ExponentialMovingAverage(ctx, "NOT_A_SYMBOL", &EMAOption{
-		Timespan: "day",
+		Timespan: Day,
 		Window:   50,
 		Limit:    1,
 	})
