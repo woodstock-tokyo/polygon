@@ -18,19 +18,17 @@ const (
 )
 
 type ForexAggregate struct {
-	Event                 ForexEventTypeEnum // The event type.
-	Pair                  string             // The current pair.
-	Open                  float64            // Today's official opening price.
-	TickVWAP              float64            // The tick's volume weighted average price.
-	TickOpen              float64            // The opening tick price for this aggregate window.
-	TickClose             float64            // The closing tick price for this aggregate window.
-	TickHigh              float64            // The highest tick price for this aggregate window.
-	TickLow               float64            // The lowest tick price for this aggregate window.
-	StartTimestamp        int64              // The timestamp of the starting tick for this aggregate window in Unix Milliseconds.
-	EndTimestamp          int64              // The timestamp of the ending tick for this aggregate window in Unix Milliseconds.
+	Event                 ForexEventTypeEnum `json:"ev"`   // The event type.
+	Pair                  string             `json:"pair"` // The current pair.
+	TickOpen              float64            `json:"o"`    // The opening tick price for this aggregate window.
+	TickClose             float64            `json:"c"`    // The closing tick price for this aggregate window.
+	TickHigh              float64            `json:"h"`    // The highest tick price for this aggregate window.
+	TickLow               float64            `json:"l"`    // The lowest tick price for this aggregate window.
+	TickVolume            int64              `json:"v"`    // The volume of trades during this aggregate window.
+	StartTimestamp        int64              `json:"s"`    // The timestamp of the starting tick for this aggregate window in Unix Milliseconds.
+	EndTimestamp          int64              `json:"e"`    // The timestamp of the ending tick for this aggregate window in Unix Milliseconds.
 	Performance           float64            // performance from last market close
 	PerformancePercentage float64            // performance percentage from last market close
-
 }
 
 func (c Client) SubscribeForexAggregates(client WebSocketClient, pairs []string, eventType ForexEventTypeEnum) (err error) {

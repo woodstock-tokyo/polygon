@@ -18,17 +18,17 @@ const (
 )
 
 type CryptoAggregate struct {
-	Event                 CryptoEventTypeEnum // The event type.
-	Pair                  string              // The crypto pair.
-	TickOpen              float64             // The opening tick price for this aggregate window.
-	TickClose             float64             // The closing tick price for this aggregate window.
-	TickHigh              float64             // The highest tick price for this aggregate window.
-	TickLow               float64             // The lowest tick price for this aggregate window.
-	TickVWAP              float64             // The volume of trades during this aggregate window.
-	VWAP                  float64             // Today's volume weighted average price.
-	AverageTradeSize      float64             // The average trade size for this aggregate window.
-	StartTimestamp        int64               // The timestamp of the starting tick for this aggregate window in Unix Milliseconds.
-	EndTimestamp          int64               // The timestamp of the ending tick for this aggregate window in Unix Milliseconds.
+	Event                 CryptoEventTypeEnum `json:"ev"`   // The event type.
+	Pair                  string              `json:"pair"` // The crypto pair.
+	TickOpen              float64             `json:"o"`    // The opening tick price for this aggregate window.
+	TickClose             float64             `json:"c"`    // The closing tick price for this aggregate window.
+	TickHigh              float64             `json:"h"`    // The highest tick price for this aggregate window.
+	TickLow               float64             `json:"l"`    // The lowest tick price for this aggregate window.
+	TickVolume            int64               `json:"v"`    // The volume of trades during this aggregate window.
+	StartTimestamp        int64               `json:"s"`    // The timestamp of the starting tick for this aggregate window in Unix Milliseconds.
+	EndTimestamp          int64               `json:"e"`    // The timestamp of the ending tick for this aggregate window in Unix Milliseconds.
+	TickVWAP              float64             `json:"vm"`   // The volume weighted average price.
+	AverageTradeSize      float64             `json:"z"`    // The average trade size for this aggregate window.
 	Performance           float64             // performance from last market close
 	PerformancePercentage float64             // performance percentage from last market close
 }
