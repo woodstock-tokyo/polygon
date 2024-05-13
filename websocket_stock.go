@@ -58,7 +58,7 @@ const (
 type StockAggregate struct {
 	Event             StockEventTypeEnum `json:"ev"`
 	Symbol            string             `json:"sym"`
-	TickVolume        int64              `json:"v"`
+	TickVolume        float64            `json:"v"`
 	AccumulatedVolume int64              `json:"av"`
 	Open              float64            `json:"op"`
 	TickVWAP          float64            `json:"vw"`

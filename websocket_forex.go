@@ -24,7 +24,7 @@ type ForexAggregate struct {
 	TickClose             float64            `json:"c"`    // The closing tick price for this aggregate window.
 	TickHigh              float64            `json:"h"`    // The highest tick price for this aggregate window.
 	TickLow               float64            `json:"l"`    // The lowest tick price for this aggregate window.
-	TickVolume            int64              `json:"v"`    // The volume of trades during this aggregate window.
+	TickVolume            float64            `json:"v"`    // The volume of trades during this aggregate window.
 	StartTimestamp        int64              `json:"s"`    // The timestamp of the starting tick for this aggregate window in Unix Milliseconds.
 	EndTimestamp          int64              `json:"e"`    // The timestamp of the ending tick for this aggregate window in Unix Milliseconds.
 	Performance           float64            // performance from last market close
