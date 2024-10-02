@@ -12,18 +12,24 @@ type TickerDetail struct {
 	RequestID string             `json:"request_id"`
 }
 
+type TickerType string
+
+const (
+	TickerTypeCommonStock TickerType = "CS"
+)
+
 // TickerDetailResult ticker detail result item
 type TickerDetailResult struct {
-	Ticker          string  `json:"ticker"`
-	Name            string  `json:"name"`
-	Market          string  `json:"market"`
-	Locale          string  `json:"locale"`
-	PrimaryExchange string  `json:"primary_exchange"`
-	Type            string  `json:"type"`
-	Active          bool    `json:"active"`
-	CurrencyName    string  `json:"currency_name"`
-	MarketCap       float64 `json:"market_cap"`
-	PhoneNumber     string  `json:"phone_number"`
+	Ticker          string     `json:"ticker"`
+	Name            string     `json:"name"`
+	Market          string     `json:"market"`
+	Locale          string     `json:"locale"`
+	PrimaryExchange string     `json:"primary_exchange"`
+	Type            TickerType `json:"type"`
+	Active          bool       `json:"active"`
+	CurrencyName    string     `json:"currency_name"`
+	MarketCap       float64    `json:"market_cap"`
+	PhoneNumber     string     `json:"phone_number"`
 	Address         struct {
 		Address1   string `json:"address1"`
 		City       string `json:"city"`
