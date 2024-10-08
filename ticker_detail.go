@@ -14,8 +14,8 @@ type TickerDetail struct {
 
 type TickerType string
 
-const (
-	TickerTypeCommonStock TickerType = "CS"
+var (
+	TickerTypeETF []TickerType = []TickerType{"ETF", "ETN", "ETV", "ETS"}
 )
 
 // TickerDetailResult ticker detail result item
