@@ -73,13 +73,6 @@ type StockAggregate struct {
 	OTC               *bool              `json:"otc"`
 }
 
-func (s *StockAggregate) ValidOpen() float64 {
-	if s.Open == 0 {
-		return s.TickOpen
-	}
-	return s.Open
-}
-
 func (c Client) SubscribeStockAggregates(client WebSocketClient, symbols []string, eventType StockEventTypeEnum) (err error) {
 	// connect
 	client.Dial(fmt.Sprintf("%s/stocks", c.websocketBaseURL), nil)
