@@ -74,7 +74,7 @@ func (c Client) LastestDiviend(ctx context.Context, ticker string, opt *Dividend
 
 	opt.Limit = 1
 	opt.Order = Descend
-	opt.Sort = "declaration_date"
+	// opt.Sort = "declaration_date" // to avoid Polygon bug , temporary remove sort key
 
 	d, err := c.Dividend(ctx, ticker, opt)
 	if err != nil {
