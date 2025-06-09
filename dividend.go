@@ -46,6 +46,8 @@ type DividendOption struct {
 	Limit             uint         `url:"limit,omitempty"`
 	Sort              string       `url:"sort,omitempty"`
 	ExDividendDateGTE string       `url:"ex_dividend_date.gte,omitempty"`
+	PayDateGTE        string       `url:"pay_date.gte,omitempty"`
+	PayDateLTE        string       `url:"pay_date.lte,omitempty"`
 }
 
 // Dividend Get a list of historical cash dividends, including the ticker symbol, declaration date, ex-dividend date, record date, pay date, frequency, and amount.
