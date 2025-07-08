@@ -36,6 +36,10 @@ func (m Market) String(market ...string) string {
 			return string(Closed)
 		}
 
+		if m.Status == Overnight {
+			return string(Overnight)
+		}
+
 		if m.EarlyHours {
 			return string(EarlyHours)
 		}
