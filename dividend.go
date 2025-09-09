@@ -35,10 +35,22 @@ const (
 	ST DividendType = "ST"
 )
 
+type DividendFrequency int
+
+const (
+	FrequencyOnce       DividendFrequency = 0
+	FrequencyMonthly    DividendFrequency = 12
+	FrequencyBiMonthly  DividendFrequency = 24
+	FrequencyQuarterly  DividendFrequency = 4
+	FrequencyAnnually   DividendFrequency = 1
+	FrequencyBiAnnually DividendFrequency = 2
+	FrequencyWeekly     DividendFrequency = 52
+)
+
 type DividendOption struct {
 	Ticker string `url:"ticker"`
 	// Query by the number of times per year the dividend is paid out. Possible values are 0 (one-time), 1 (annually), 2 (bi-annually), 4 (quarterly), and 12 (monthly).
-	Frequency int `url:"frequency,omitempty"`
+	Frequency *DividendFrequency `url:"frequency,omitempty"`
 	// Query by the type of dividend. Dividends that have been paid and/or are expected to be paid on consistent schedules are denoted as CD.
 	// Special Cash dividends that have been paid that are infrequent or unusual, and/or can not be expected to occur in the future are denoted as SC.
 	DividendType      DividendType `url:"dividend_type,omitempty"`
