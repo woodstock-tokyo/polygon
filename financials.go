@@ -66,9 +66,11 @@ const (
 type FinancialsOption struct {
 	Ticker             string                    `url:"ticker"`                          // Query by company ticker.
 	CIK                string                    `url:"cik,omitempty"`                   // Query by central index key (CIK) Number
-	CampanyName        string                    `url:"company_name,omitempty"`          // Query by company name.
+	CompanyName        string                    `url:"company_name,omitempty"`          // Query by company name.
 	SIC                string                    `url:"sic,omitempty"`                   // Query by standard industrial classification (SIC)
 	FilingDate         string                    `url:"filing_date,omitempty"`           // Query by the date the financial statement was filed (YYYY-MM-DD).
+	FilingDateGTE      string                    `url:"filing_date.gte,omitempty"`       // Query by the date the financial statement was filed (greater than or equal to) in YYYY-MM-DD format.
+	FilingDateLTE      string                    `url:"filing_date.lte,omitempty"`       // Query by the date the financial statement was filed (less than or equal to) in YYYY-MM-DD format.
 	PeriodOfReportDate string                    `url:"period_of_report_date,omitempty"` // The period of report for the filing with financials data in YYYY-MM-DD format.
 	Timeframe          FinancialsOptionTimeframe `url:"timeframe,omitempty"`             // Query by timeframe. Annual financials originate from 10-K filings, and quarterly financials originate from 10-Q filings
 	IncludeSources     bool                      `url:"include_sources,omitempty"`       // Whether or not to include the `xpath` and `formula` attributes for each financial data point
