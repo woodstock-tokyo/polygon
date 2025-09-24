@@ -66,7 +66,7 @@ const (
 type FinancialsOption struct {
 	Ticker             string                    `url:"ticker"`                          // Query by company ticker.
 	CIK                string                    `url:"cik,omitempty"`                   // Query by central index key (CIK) Number
-	CampanyName        string                    `url:"company_name,omitempty"`          // Query by company name.
+	CompanyName        string                    `url:"company_name,omitempty"`          // Query by company name.
 	SIC                string                    `url:"sic,omitempty"`                   // Query by standard industrial classification (SIC)
 	FilingDate         string                    `url:"filing_date,omitempty"`           // Query by the date the financial statement was filed (YYYY-MM-DD).
 	FilingDateGTE      string                    `url:"filing_date.gte,omitempty"`       // Query by the date the financial statement was filed (greater than or equal to) in YYYY-MM-DD format.
