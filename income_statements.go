@@ -33,8 +33,8 @@ type IncomeStatement struct {
 	EquityInAffiliates                          float64  `json:"equity_in_affiliates"`
 	ExtraordinaryItems                          float64  `json:"extraordinary_items"`
 	FilingDate                                  string   `json:"filing_date"`
-	FiscalQuarter                               float64  `json:"fiscal_quarter"`
-	FiscalYear                                  float64  `json:"fiscal_year"`
+	FiscalQuarter                               int      `json:"fiscal_quarter"`
+	FiscalYear                                  int      `json:"fiscal_year"`
 	GrossProfit                                 float64  `json:"gross_profit"`
 	IncomeBeforeIncomeTaxes                     float64  `json:"income_before_income_taxes"`
 	IncomeTaxes                                 float64  `json:"income_taxes"`
