@@ -93,7 +93,7 @@ func (c Client) IncomeStatements(ctx context.Context, opt *IncomeStatementsOptio
 		err = ErrIncomeStatementsNoResults
 		return
 	}
-	return resp, err
+	return
 }
 
 // GetRevenue helper returns the revenue for a statement period.
