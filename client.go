@@ -45,7 +45,7 @@ func (c Client) UseVXEndpoints() Client {
 	return c
 }
 
-// polygon api versions are not unified, sometimes we have to switch to financials v1
+// UseFinancialsV1Endpoints switches to financials v1 as polygon api versions are not unified.
 func (c Client) UseFinancialsV1Endpoints() Client {
 	c.baseURL = strings.Replace(c.baseURL, "v2", "stocks/financials/v1", 1)
 	return c
