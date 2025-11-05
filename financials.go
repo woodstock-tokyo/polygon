@@ -45,6 +45,17 @@ type Metric struct {
 	Order int     `json:"order"`
 }
 
+func (fr *FinancialResult) GetEarning() float64 {
+	if fr.Financials.IncomeStatement == nil {
+		return 0
+	}
+	if rev, ok := fr.Financials.IncomeStatement["diluted_earnings_per_share"]; ok {
+		return rev.Value
+
+	}
+	return 0
+}
+
 // GetRevenue returns the "revenues" metric value if available.
 func (fr *FinancialResult) GetRevenue() float64 {
 	if fr.Financials.IncomeStatement == nil {
