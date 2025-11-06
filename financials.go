@@ -82,6 +82,8 @@ type FinancialsOption struct {
 var ErrFinancialsNoResults = errors.New("no financials results")
 
 // Financials Retrieve historical financial data for a specified stock ticker
+//
+// Deprecated: This API is deprecated and will be removed in a future version.
 func (c Client) Financials(ctx context.Context, ticker string, opt *FinancialsOption) (resp Financials, err error) {
 	c = c.UseVXEndpoints()
 	ticker = strings.ToUpper(strings.TrimSpace(ticker))

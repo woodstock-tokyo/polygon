@@ -45,6 +45,12 @@ func (c Client) UseVXEndpoints() Client {
 	return c
 }
 
+// UseFinancialsV1Endpoints switches to financials v1 as polygon api versions are not unified.
+func (c Client) UseFinancialsV1Endpoints() Client {
+	c.baseURL = strings.Replace(c.baseURL, "v2", "stocks/financials/v1", 1)
+	return c
+}
+
 // Error represents an Polygon API error
 type Error struct {
 	Status       string `json:"status"`

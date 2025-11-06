@@ -45,9 +45,7 @@ type MockClient struct{}
 func (c MockClient) UseVXEndpoints() Client {
 	return Client{}
 }
-func (c MockClient) endpointWithOpts(endpoint string, opt interface{}) (string, error) {
-	return "mock_endpoint", nil
-}
+
 func (c MockClient) GetJSON(ctx context.Context, endpoint string, v interface{}) error {
 	f := v.(*Financials)
 	*f = Financials{

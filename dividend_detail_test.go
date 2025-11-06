@@ -15,6 +15,6 @@ func TestDividend(t *testing.T) {
 	}
 	t.Logf("dividend: %+v", dividend)
 
-	dividend, err = client.LastestDiviend(context.Background(), "COIN", &DividendOption{Limit: 1})
+	_, err = client.LastestDiviend(context.Background(), "COIN", &DividendOption{Limit: 1})
 	assert.Error(t, err)
 }
