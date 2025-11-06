@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+type FinancialsOptionTimeframe string
+
+const (
+	FinancialsOptionTimeframeAnnual               FinancialsOptionTimeframe = "annual"
+	FinancialsOptionTimeframeQuarterly            FinancialsOptionTimeframe = "quarterly"
+	FinancialsOptionTimeframeTrailingTwelveMonths FinancialsOptionTimeframe = "trailing_twelve_months"
+)
+
 // IncomeStatementsResponse top-level response for the new income statements endpoint.
 // This endpoint replaces the deprecated Financials endpoint.
 type IncomeStatementsResponse struct {
@@ -59,9 +67,11 @@ type IncomeStatement struct {
 // IncomeStatementsOption holds query params for the income statements endpoint.
 type IncomeStatementsOption struct {
 	CIK           string                    `url:"cik,omitempty"`
-	Tickers       string                    `url:"tickers,omitempty"`     // matches API expecting a value contained in array
-	PeriodEnd     string                    `url:"period_end,omitempty"`  // YYYY-MM-DD
-	FilingDate    string                    `url:"filing_date,omitempty"` // YYYY-MM-DD
+	Tickers       string                    `url:"tickers,omitempty"`         // matches API expecting a value contained in array
+	PeriodEnd     string                    `url:"period_end,omitempty"`      // YYYY-MM-DD
+	FilingDate    string                    `url:"filing_date,omitempty"`     // YYYY-MM-DD
+	FilingDateGTE string                    `url:"filing_date.gte,omitempty"` // Query by the date the financial statement was filed (greater than or equal to) in YYYY-MM-DD format.
+	FilingDateLTE string                    `url:"filing_date.lte,omitempty"` // Query by the date the financial statement was filed (less than or equal to) in YYYY-MM-DD format.
 	FiscalYear    string                    `url:"fiscal_year,omitempty"`
 	FiscalQuarter string                    `url:"fiscal_quarter,omitempty"`
 	Timeframe     FinancialsOptionTimeframe `url:"timeframe,omitempty"` // quarterly, annual, trailing_twelve_months

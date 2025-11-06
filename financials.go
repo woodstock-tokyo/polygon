@@ -56,13 +56,6 @@ func (fr *FinancialResult) GetRevenue() float64 {
 	return 0
 }
 
-type FinancialsOptionTimeframe string
-
-const (
-	FinancialsOptionTimeframeAnnual    FinancialsOptionTimeframe = "annual"
-	FinancialsOptionTimeframeQuarterly FinancialsOptionTimeframe = "quarterly"
-)
-
 type FinancialsOption struct {
 	Ticker             string                    `url:"ticker"`                          // Query by company ticker.
 	CIK                string                    `url:"cik,omitempty"`                   // Query by central index key (CIK) Number
