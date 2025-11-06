@@ -108,3 +108,8 @@ func (c Client) IncomeStatements(ctx context.Context, opt *IncomeStatementsOptio
 
 // GetRevenue helper returns the revenue for a statement period.
 func (is IncomeStatement) GetRevenue() float64 { return is.Revenue }
+
+// GetEarningsPerShare helper returns the diluted earnings per share for a statement period.
+func (is IncomeStatement) GetEarningsPerShare() float64 {
+	return is.DilutedEarningsPerShare
+}
