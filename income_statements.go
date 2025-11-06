@@ -58,15 +58,15 @@ type IncomeStatement struct {
 
 // IncomeStatementsOption holds query params for the income statements endpoint.
 type IncomeStatementsOption struct {
-	CIK           string `url:"cik,omitempty"`
-	Tickers       string `url:"tickers,omitempty"`     // matches API expecting a value contained in array
-	PeriodEnd     string `url:"period_end,omitempty"`  // YYYY-MM-DD
-	FilingDate    string `url:"filing_date,omitempty"` // YYYY-MM-DD
-	FiscalYear    string `url:"fiscal_year,omitempty"`
-	FiscalQuarter string `url:"fiscal_quarter,omitempty"`
-	Timeframe     string `url:"timeframe,omitempty"` // quarterly, annual, trailing_twelve_months
-	Limit         uint   `url:"limit,omitempty"`     // default 100, max 50000
-	Sort          string `url:"sort,omitempty"`      // e.g. period_end.desc
+	CIK           string                    `url:"cik,omitempty"`
+	Tickers       string                    `url:"tickers,omitempty"`     // matches API expecting a value contained in array
+	PeriodEnd     string                    `url:"period_end,omitempty"`  // YYYY-MM-DD
+	FilingDate    string                    `url:"filing_date,omitempty"` // YYYY-MM-DD
+	FiscalYear    string                    `url:"fiscal_year,omitempty"`
+	FiscalQuarter string                    `url:"fiscal_quarter,omitempty"`
+	Timeframe     FinancialsOptionTimeframe `url:"timeframe,omitempty"` // quarterly, annual, trailing_twelve_months
+	Limit         uint                      `url:"limit,omitempty"`     // default 100, max 50000
+	Sort          string                    `url:"sort,omitempty"`      // e.g. period_end.desc
 }
 
 var ErrIncomeStatementsNoResults = errors.New("no income statements results")
