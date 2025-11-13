@@ -56,6 +56,17 @@ func (fr *FinancialResult) GetRevenue() float64 {
 	return 0
 }
 
+// GetConsolidatedNetIncomeLoss returns the "net income / loss" value if available
+func (fr *FinancialResult) GetConsolidatedNetIncomeLoss() float64 {
+	if fr.Financials.IncomeStatement == nil {
+		return 0
+	}
+	if rev, ok := fr.Financials.IncomeStatement["consolidated_net_income_loss"]; ok {
+		return rev.Value
+	}
+	return 0
+}
+
 type FinancialsOption struct {
 	Ticker             string                    `url:"ticker"`                          // Query by company ticker.
 	CIK                string                    `url:"cik,omitempty"`                   // Query by central index key (CIK) Number
