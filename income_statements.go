@@ -113,3 +113,8 @@ func (is IncomeStatement) GetRevenue() float64 { return is.Revenue }
 func (is IncomeStatement) GetEarningsPerShare() float64 {
 	return is.DilutedEarningsPerShare
 }
+
+// GetNetIncome helper returns the net income for a statement period.
+func (is IncomeStatement) GetNetIncome() float64 {
+	return is.ConsolidatedNetIncomeLoss
+}
