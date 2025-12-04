@@ -218,7 +218,7 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 			if !isGoAwayOrConnError(err) {
 				return []byte{}, err
 			}
-			time.Sleep(time.Duration(i+1) * 100 * time.Millisecond) // exponential backoff
+			time.Sleep(time.Duration(1<<uint(i)) * 100 * time.Millisecond) // exponential backoff
 			continue                                                // retry
 		}
 		defer resp.Body.Close()
