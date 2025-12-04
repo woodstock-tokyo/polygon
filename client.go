@@ -218,8 +218,10 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 			if !isGoAwayOrConnError(err) {
 				return []byte{}, err
 			}
-			time.Sleep(time.Duration(1<<uint(i)) * 100 * time.Millisecond) // exponential backoff
-			continue                                                // retry
+			if i < maxRetries-1 {
+				time.Sleep(time.Duration(1<<uint(i)) * 100 * time.Millisecond) // exponential backoff
+			}
+			continue // retry
 		}
 		defer resp.Body.Close()
 		// Even if GET didn't return an error, check the status code to make sure
