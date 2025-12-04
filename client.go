@@ -3,6 +3,7 @@ package polygon
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 
@@ -185,30 +186,57 @@ func (c *Client) GetFloat64(ctx context.Context, endpoint string) (float64, erro
 	return strconv.ParseFloat(string(b), 64)
 }
 
+func isGoAwayOrConnError(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := err.Error()
+	if strings.Contains(msg, "http2: server sent GOAWAY") || strings.Contains(msg, "connection reset by peer") {
+		return true
+	}
+	var netErr net.Error
+	if ok := errors.As(err, &netErr); ok {
+		// check if it's a timeout error
+		return netErr.Timeout()
+	}
+	return false
+}
+
+const maxRetries = 3
+
 func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
-	req, err := http.NewRequest("GET", address, nil)
-	if err != nil {
-		return []byte{}, err
-	}
-
-	resp, err := c.httpClient.Do(req.WithContext(ctx))
-	if err != nil {
-		return []byte{}, err
-	}
-	defer resp.Body.Close()
-	// Even if GET didn't return an error, check the status code to make sure
-	// everything was ok.
-	if resp.StatusCode != http.StatusOK {
-		b, err := io.ReadAll(resp.Body)
-		msg := ""
-
-		if err == nil {
-			msg = string(b)
+	var lastErr error
+	for i := 0; i < maxRetries; i++ {
+		req, err := http.NewRequest("GET", address, nil)
+		if err != nil {
+			return []byte{}, err
 		}
 
-		return []byte{}, Error{Status: resp.Status, ErrorMessage: msg}
+		resp, err := c.httpClient.Do(req.WithContext(ctx))
+		if err != nil {
+			lastErr = err
+			if !isGoAwayOrConnError(err) {
+				return []byte{}, err
+			}
+			time.Sleep(time.Duration(i+1) * 100 * time.Millisecond) // exponential backoff
+			continue                                                // retry
+		}
+		defer resp.Body.Close()
+		// Even if GET didn't return an error, check the status code to make sure
+		// everything was ok.
+		if resp.StatusCode != http.StatusOK {
+			b, err := io.ReadAll(resp.Body)
+			msg := ""
+
+			if err == nil {
+				msg = string(b)
+			}
+
+			return []byte{}, Error{Status: resp.Status, ErrorMessage: msg}
+		}
+		return io.ReadAll(resp.Body)
 	}
-	return io.ReadAll(resp.Body)
+	return []byte{}, lastErr
 }
 
 // Returns an URL object that points to the endpoint with optional query parameters.
