@@ -40,7 +40,7 @@ func TestGetBytesRetry(t *testing.T) {
 	client.httpClient.Transport = rt
 
 	ctx := context.Background()
-	data, err := client.getBytes(ctx, "/v1/test-endpoint")
+	data, err := client.getBytes(ctx, "/v1/test-endpoint", true)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
@@ -68,7 +68,7 @@ func TestGetBytesNoRetrySuccess(t *testing.T) {
 	client.httpClient.Transport = rt
 
 	ctx := context.Background()
-	data, err := client.getBytes(ctx, "/v1/test-endpoint")
+	data, err := client.getBytes(ctx, "/v1/test-endpoint", true)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}

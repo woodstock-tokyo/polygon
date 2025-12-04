@@ -158,6 +158,14 @@ func (c *Client) FetchURLToJSON(ctx context.Context, u *url.URL, v any) error {
 	return json.Unmarshal(data, v)
 }
 
+func (c *Client) FetchURLToJSONWithRetries(ctx context.Context, u *url.URL, v any) error {
+	data, err := c.getBytes(ctx, u.String(), true)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, v)
+}
+
 // GetJSONWithoutToken gets the JSON data from the given endpoint without
 // adding a token to the URL.
 func (c *Client) GetJSONWithoutToken(ctx context.Context, endpoint string, v any) error {
@@ -166,6 +174,14 @@ func (c *Client) GetJSONWithoutToken(ctx context.Context, endpoint string, v any
 		return err
 	}
 	return c.FetchURLToJSON(ctx, u, v)
+}
+
+func (c *Client) GetJSONWithoutTokenWithRetries(ctx context.Context, endpoint string, v any) error {
+	u, err := c.url(endpoint, nil)
+	if err != nil {
+		return err
+	}
+	return c.FetchURLToJSONWithRetries(ctx, u, v)
 }
 
 // GetBytes gets the data from the given endpoint.
@@ -177,9 +193,25 @@ func (c *Client) GetBytes(ctx context.Context, endpoint string) ([]byte, error) 
 	return c.getBytes(ctx, u.String())
 }
 
+func (c *Client) GetBytesWithRetries(ctx context.Context, endpoint string) ([]byte, error) {
+	u, err := c.url(endpoint, map[string]string{"apiKey": c.token})
+	if err != nil {
+		return nil, err
+	}
+	return c.getBytes(ctx, u.String(), true)
+}
+
 // GetFloat64 gets the number from the given endpoint.
 func (c *Client) GetFloat64(ctx context.Context, endpoint string) (float64, error) {
 	b, err := c.GetBytes(ctx, endpoint)
+	if err != nil {
+		return 0.0, err
+	}
+	return strconv.ParseFloat(string(b), 64)
+}
+
+func (c *Client) GetFloat64WithRetries(ctx context.Context, endpoint string) (float64, error) {
+	b, err := c.GetBytesWithRetries(ctx, endpoint)
 	if err != nil {
 		return 0.0, err
 	}
@@ -204,9 +236,15 @@ func isGoAwayOrConnError(err error) bool {
 
 const maxRetries = 3
 
-func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
+func (c *Client) getBytes(ctx context.Context, address string, flags ...bool) ([]byte, error) {
 	var lastErr error
-	for i := 0; i < maxRetries; i++ {
+
+	retryTimes := 1
+	if len(flags) > 0 && flags[0] {
+		// no retry
+		retryTimes = maxRetries
+	}
+	for i := 0; i < retryTimes; i++ {
 		req, err := http.NewRequest("GET", address, nil)
 		if err != nil {
 			return []byte{}, err
