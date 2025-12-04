@@ -223,6 +223,17 @@ func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
 			}
 			continue // retry
 		}
+
+		if resp.StatusCode == http.StatusBadGateway || resp.StatusCode == http.StatusServiceUnavailable || resp.StatusCode == http.StatusGatewayTimeout {
+			// treat 502, 503, 504 as transient errors and retry
+			lastErr = fmt.Errorf("transient error: %s", resp.Status)
+			resp.Body.Close()
+			if i < maxRetries-1 {
+				time.Sleep(time.Duration(1<<uint(i)) * 100 * time.Millisecond) // exponential backoff
+			}
+			continue // retry
+		}
+
 		defer resp.Body.Close()
 		// Even if GET didn't return an error, check the status code to make sure
 		// everything was ok.
