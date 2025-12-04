@@ -33,7 +33,7 @@ func (c Client) StockOpenClose(ctx context.Context, ticker string, date string, 
 	if err != nil {
 		return p, err
 	}
-	err = c.GetJSON(ctx, endpoint, &p)
+	err = c.GetJSONWithRetries(ctx, endpoint, &p)
 	return p, err
 }
 
@@ -45,6 +45,6 @@ func (c Client) CryptoOpenClose(ctx context.Context, from, to string, date strin
 	if err != nil {
 		return p, err
 	}
-	err = c.GetJSON(ctx, endpoint, &p)
+	err = c.GetJSONWithRetries(ctx, endpoint, &p)
 	return p, err
 }
