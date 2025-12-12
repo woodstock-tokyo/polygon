@@ -138,6 +138,14 @@ func (c *Client) GetJSON(ctx context.Context, endpoint string, v any) error {
 	return c.FetchURLToJSON(ctx, u, v)
 }
 
+func (c *Client) GetJSONWithRetries(ctx context.Context, endpoint string, v any) error {
+	u, err := c.url(endpoint, map[string]string{"apiKey": c.token})
+	if err != nil {
+		return err
+	}
+	return c.FetchURLToJSONWithRetries(ctx, u, v)
+}
+
 // GetJSONWithQueryParams gets the JSON data from the given endpoint with the query parameters attached.
 func (c *Client) GetJSONWithQueryParams(ctx context.Context, endpoint string, queryParams map[string]string, v any) error {
 	queryParams["apiKey"] = c.token
