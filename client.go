@@ -3,6 +3,7 @@ package polygon
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 
@@ -137,6 +138,14 @@ func (c *Client) GetJSON(ctx context.Context, endpoint string, v any) error {
 	return c.FetchURLToJSON(ctx, u, v)
 }
 
+func (c *Client) GetJSONWithRetries(ctx context.Context, endpoint string, v any) error {
+	u, err := c.url(endpoint, map[string]string{"apiKey": c.token})
+	if err != nil {
+		return err
+	}
+	return c.FetchURLToJSONWithRetries(ctx, u, v)
+}
+
 // GetJSONWithQueryParams gets the JSON data from the given endpoint with the query parameters attached.
 func (c *Client) GetJSONWithQueryParams(ctx context.Context, endpoint string, queryParams map[string]string, v any) error {
 	queryParams["apiKey"] = c.token
@@ -157,6 +166,14 @@ func (c *Client) FetchURLToJSON(ctx context.Context, u *url.URL, v any) error {
 	return json.Unmarshal(data, v)
 }
 
+func (c *Client) FetchURLToJSONWithRetries(ctx context.Context, u *url.URL, v any) error {
+	data, err := c.getBytes(ctx, u.String(), true)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, v)
+}
+
 // GetJSONWithoutToken gets the JSON data from the given endpoint without
 // adding a token to the URL.
 func (c *Client) GetJSONWithoutToken(ctx context.Context, endpoint string, v any) error {
@@ -165,6 +182,14 @@ func (c *Client) GetJSONWithoutToken(ctx context.Context, endpoint string, v any
 		return err
 	}
 	return c.FetchURLToJSON(ctx, u, v)
+}
+
+func (c *Client) GetJSONWithoutTokenWithRetries(ctx context.Context, endpoint string, v any) error {
+	u, err := c.url(endpoint, nil)
+	if err != nil {
+		return err
+	}
+	return c.FetchURLToJSONWithRetries(ctx, u, v)
 }
 
 // GetBytes gets the data from the given endpoint.
@@ -176,6 +201,14 @@ func (c *Client) GetBytes(ctx context.Context, endpoint string) ([]byte, error) 
 	return c.getBytes(ctx, u.String())
 }
 
+func (c *Client) GetBytesWithRetries(ctx context.Context, endpoint string) ([]byte, error) {
+	u, err := c.url(endpoint, map[string]string{"apiKey": c.token})
+	if err != nil {
+		return nil, err
+	}
+	return c.getBytes(ctx, u.String(), true)
+}
+
 // GetFloat64 gets the number from the given endpoint.
 func (c *Client) GetFloat64(ctx context.Context, endpoint string) (float64, error) {
 	b, err := c.GetBytes(ctx, endpoint)
@@ -185,30 +218,84 @@ func (c *Client) GetFloat64(ctx context.Context, endpoint string) (float64, erro
 	return strconv.ParseFloat(string(b), 64)
 }
 
-func (c *Client) getBytes(ctx context.Context, address string) ([]byte, error) {
-	req, err := http.NewRequest("GET", address, nil)
+func (c *Client) GetFloat64WithRetries(ctx context.Context, endpoint string) (float64, error) {
+	b, err := c.GetBytesWithRetries(ctx, endpoint)
 	if err != nil {
-		return []byte{}, err
+		return 0.0, err
 	}
+	return strconv.ParseFloat(string(b), 64)
+}
 
-	resp, err := c.httpClient.Do(req.WithContext(ctx))
-	if err != nil {
-		return []byte{}, err
+func isGoAwayOrConnError(err error) bool {
+	if err == nil {
+		return false
 	}
-	defer resp.Body.Close()
-	// Even if GET didn't return an error, check the status code to make sure
-	// everything was ok.
-	if resp.StatusCode != http.StatusOK {
-		b, err := io.ReadAll(resp.Body)
-		msg := ""
+	msg := err.Error()
+	if strings.Contains(msg, "http2: server sent GOAWAY") || strings.Contains(msg, "connection reset by peer") {
+		return true
+	}
+	var netErr net.Error
+	if ok := errors.As(err, &netErr); ok {
+		// check if it's a timeout error
+		return netErr.Timeout()
+	}
+	return false
+}
 
-		if err == nil {
-			msg = string(b)
+const maxRetries = 3
+
+func (c *Client) getBytes(ctx context.Context, address string, flags ...bool) ([]byte, error) {
+	var lastErr error
+
+	retryTimes := 1
+	if len(flags) > 0 && flags[0] {
+		// no retry
+		retryTimes = maxRetries
+	}
+	for i := 0; i < retryTimes; i++ {
+		req, err := http.NewRequest("GET", address, nil)
+		if err != nil {
+			return []byte{}, err
 		}
 
-		return []byte{}, Error{Status: resp.Status, ErrorMessage: msg}
+		resp, err := c.httpClient.Do(req.WithContext(ctx))
+		if err != nil {
+			lastErr = err
+			if !isGoAwayOrConnError(err) {
+				return []byte{}, err
+			}
+			if i < maxRetries-1 {
+				time.Sleep(time.Duration(1<<uint(i)) * 100 * time.Millisecond) // exponential backoff
+			}
+			continue // retry
+		}
+
+		if resp.StatusCode == http.StatusBadGateway || resp.StatusCode == http.StatusServiceUnavailable || resp.StatusCode == http.StatusGatewayTimeout {
+			// treat 502, 503, 504 as transient errors and retry
+			lastErr = fmt.Errorf("transient error: %s", resp.Status)
+			resp.Body.Close()
+			if i < maxRetries-1 {
+				time.Sleep(time.Duration(1<<uint(i)) * 100 * time.Millisecond) // exponential backoff
+			}
+			continue // retry
+		}
+
+		defer resp.Body.Close()
+		// Even if GET didn't return an error, check the status code to make sure
+		// everything was ok.
+		if resp.StatusCode != http.StatusOK {
+			b, err := io.ReadAll(resp.Body)
+			msg := ""
+
+			if err == nil {
+				msg = string(b)
+			}
+
+			return []byte{}, Error{Status: resp.Status, ErrorMessage: msg}
+		}
+		return io.ReadAll(resp.Body)
 	}
-	return io.ReadAll(resp.Body)
+	return []byte{}, lastErr
 }
 
 // Returns an URL object that points to the endpoint with optional query parameters.
