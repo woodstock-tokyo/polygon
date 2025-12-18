@@ -54,6 +54,6 @@ func (c Client) PrevClose(ctx context.Context, ticker string, opt *PrevCloseOpti
 	if err != nil {
 		return p, err
 	}
-	err = c.GetJSON(ctx, endpoint, &p)
+	err = c.GetJSONWithRetries(ctx, endpoint, &p)
 	return p, err
 }
